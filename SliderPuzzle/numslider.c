@@ -1,10 +1,10 @@
 #include "numslider.h"
 
-// Function: fillPuzzle
-// Fill the puzzle with random numbers from 1 to height * width - 1
-int fillPuzzle(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
+// Fuction: fillPuzzle
+// fills an array that is 5 by 5 with numbers 1-25 in a random order
+void fillPuzzle(int height, int width, int puzzle[5][5])
 {
-    printf("fillPuzzle\n");
+    // printf("fillPuzzle\n");
     int i = 0;
     int j = 0;
     int num = 1;
@@ -17,18 +17,21 @@ int fillPuzzle(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
             num++;
         }
     }
-    puzzle[height - 1][width - 1] = 0;
 
     printf("Puzzle filled\n");
-
-    return 0;
 }
 
 // Function: printPuzzleWithSides
-// Print the puzzle with a border around it and the numbers aligned each in a box
-int printPuzzleWithSides(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
+void printPuzzleWithSides(int height, int width, int puzzle[5][5])
 {
-    printf("printPuzzleWithSides\n");
+    // clear screen
+    system("cls");
+
+    // print instructions
+    printf("The goal of the game is to get the numbers in order from 1-25\n");
+    printf("the blank space is represented by 0\n");
+
+    // printf("printPuzzleWithSides\n");
     int i = 0;
     int j = 0;
     int k = 0;
@@ -37,7 +40,7 @@ int printPuzzleWithSides(int height, int width, int puzzle[sizeof(height)][sizeo
     int n = 0;
 
     // Print top border
-    for (i = 0; i < width * 4 + 4; i++)
+    for (i = 0; i < width * 5 + 1; i++)
     {
         printf("-");
     }
@@ -53,20 +56,53 @@ int printPuzzleWithSides(int height, int width, int puzzle[sizeof(height)][sizeo
         }
         printf("\n");
         // Print bottom border
-        for (l = 0; l < width * 4 + 4; l++)
+        for (l = 0; l < width * 5 + 1; l++)
         {
             printf("-");
         }
         printf("\n");
     }
 
-    return 0;
+    printf("w = up, s = down, a = left, d = right, q = quit\n");
+}
+
+// Function: shufflePuzzle
+void shufflePuzzle(int height, int width, int puzzle[5][5])
+{
+    // seed random number generator
+    srand(time(NULL));
+
+    // printf("shufflePuzzle\n");
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    int l = 0;
+    int m = 0;
+    int n = 0;
+
+    // Shuffle puzzle
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+
+            // Generate random numbers
+            k = rand() % height;
+            l = rand() % width;
+
+            // Swap numbers
+            m = puzzle[i][j];
+            n = puzzle[k][l];
+            puzzle[i][j] = n;
+            puzzle[k][l] = m;
+        }
+    }
 }
 
 // Function: findBlank
-int findBlank(int height, int width, int puzzle[sizeof(height)][sizeof(width)], int *blankRow, int *blankCol)
+void findBlankSpace(int height, int width, int puzzle[5][5], int *blankRow, int *blankCol)
 {
-    printf("findBlank\n");
+    // printf("findBlank\n");
     int i = 0;
     int j = 0;
     int found = 0;
@@ -82,94 +118,128 @@ int findBlank(int height, int width, int puzzle[sizeof(height)][sizeof(width)], 
             }
         }
     }
+}
 
-    return 0;
+// Function: makeBlankSpace
+// random place in the puzzle set to 0
+void makeBlankSpace(int height, int width, int puzzle[5][5])
+{
+    // printf("makeBlankSpace\n");
+
+    int k = 0;
+    int l = 0;
+
+    // Generate random numbers
+    k = rand() % height;
+    l = rand() % width;
+
+    puzzle[k][l] = 0;
 }
 
 // Function: moveUp
-int moveUp(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
+void moveUp(int height, int width, int puzzle[5][5])
 {
-    printf("moveUp\n");
+    // printf("moveUp\n");
     int blankRow = 0;
     int blankCol = 0;
-    findBlank(height, width, puzzle, &blankRow, &blankCol);
+    int temp = 0;
+
+    // Find blank space
+    findBlankSpace(height, width, puzzle, &blankRow, &blankCol);
+
+    // Check if blank space is on top row
     if (blankRow == 0)
     {
-        return 1;
+        printf("Can't move up\n");
     }
     else
     {
-        int temp = puzzle[blankRow][blankCol];
+        // Swap blank space with number above it
+        temp = puzzle[blankRow][blankCol];
         puzzle[blankRow][blankCol] = puzzle[blankRow - 1][blankCol];
         puzzle[blankRow - 1][blankCol] = temp;
-        return 0;
     }
 }
 
 // Function: moveDown
-int moveDown(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
+void moveDown(int height, int width, int puzzle[5][5])
 {
-    printf("moveDown\n");
+    // printf("moveDown\n");
     int blankRow = 0;
     int blankCol = 0;
-    findBlank(height, width, puzzle, &blankRow, &blankCol);
+    int temp = 0;
+
+    // Find blank space
+    findBlankSpace(height, width, puzzle, &blankRow, &blankCol);
+
+    // Check if blank space is on bottom row
     if (blankRow == height - 1)
     {
-        return 1;
+        printf("Can't move down\n");
     }
     else
     {
-        int temp = puzzle[blankRow][blankCol];
+        // Swap blank space with number below it
+        temp = puzzle[blankRow][blankCol];
         puzzle[blankRow][blankCol] = puzzle[blankRow + 1][blankCol];
         puzzle[blankRow + 1][blankCol] = temp;
-        return 0;
     }
 }
 
 // Function: moveLeft
-int moveLeft(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
+void moveLeft(int height, int width, int puzzle[5][5])
 {
-    printf("moveLeft\n");
+    // printf("moveLeft\n");
     int blankRow = 0;
     int blankCol = 0;
-    findBlank(height, width, puzzle, &blankRow, &blankCol);
+    int temp = 0;
+
+    // Find blank space
+    findBlankSpace(height, width, puzzle, &blankRow, &blankCol);
+
+    // Check if blank space is on left column
     if (blankCol == 0)
     {
-        return 1;
+        printf("Can't move left\n");
     }
     else
     {
-        int temp = puzzle[blankRow][blankCol];
+        // Swap blank space with number to the left of it
+        temp = puzzle[blankRow][blankCol];
         puzzle[blankRow][blankCol] = puzzle[blankRow][blankCol - 1];
         puzzle[blankRow][blankCol - 1] = temp;
-        return 0;
     }
 }
 
 // Function: moveRight
-int moveRight(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
+void moveRight(int height, int width, int puzzle[5][5])
 {
-    printf("moveRight\n");
+    // printf("moveRight\n");
     int blankRow = 0;
     int blankCol = 0;
-    findBlank(height, width, puzzle, &blankRow, &blankCol);
+    int temp = 0;
+
+    // Find blank space
+    findBlankSpace(height, width, puzzle, &blankRow, &blankCol);
+
+    // Check if blank space is on right column
     if (blankCol == width - 1)
     {
-        return 1;
+        printf("Can't move right\n");
     }
     else
     {
-        int temp = puzzle[blankRow][blankCol];
+        // Swap blank space with number to the right of it
+        temp = puzzle[blankRow][blankCol];
         puzzle[blankRow][blankCol] = puzzle[blankRow][blankCol + 1];
         puzzle[blankRow][blankCol + 1] = temp;
-        return 0;
     }
 }
 
 // Function: checkWin
-int checkWin(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
+int checkWin(int height, int width, int puzzle[5][5])
 {
-    printf("checkWin\n");
+    // printf("checkWin\n");
     int i = 0;
     int j = 0;
     int num = 1;
@@ -178,29 +248,45 @@ int checkWin(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
     {
         for (j = 0; j < width && win == 1; j++)
         {
-            if (puzzle[i][j] != num && puzzle[i][j] != 0)
+            if (puzzle[i][j] != num && num != 0)
             {
                 win = 0;
             }
             num++;
         }
     }
-
     return win;
 }
 
-// Function: allocate2Darray
-
-// Function: freePuzzle
-int freePuzzle(int height, int width, int puzzle[sizeof(height)][sizeof(width)])
+// Function: scoure
+// function that takes number of moves diffuculty and time and returns a score
+double score(int moves, int difficulty, double time)
 {
-    printf("freePuzzle\n");
-    int i = 0;
-    int j = 0;
-    for (i = 0; i < height; i++)
-    {
-        free(puzzle[i]);
-    }
+    // printf("score\n");
+    int score = 0;
+    score = (difficulty * 1000) - (moves * 100) - (time);
+    return score;
+}
 
-    return 0;
+// write a function that printWin in ascii art
+// print ascii art you win
+void printAsciiArt(int moves, int difficulty, double time)
+{
+    // clear screen
+    system("cls");
+
+    printf("          _______                       _________ _       \n");
+    printf(" |\\     /|(  ___  )|\\     /|    |\\     /|\\__   __/( (    /|\n");
+    printf(" ( \\   / )| (   ) || )   ( |    | )   ( |   ) (   |  \\  ( |\n");
+    printf("  \\ (_) / | |   | || |   | |    | | _ | |   | |   |   \\ | |\n");
+    printf("   \\   /  | |   | || |   | |    | |( )| |   | |   | (\\ \\) |\n");
+    printf("    ) (   | |   | || |   | |    | || || |   | |   | | \\   |\n");
+    printf("    | |   | (___) || (___) |    | () () |___) (___| )  \\  |\n");
+    printf("    \\_/   (_______)(_______)    (_______)\\_______/|/    )_)\n");
+
+    printf("\n\nYour score was: \n");
+    printf("%d\n", score(moves, difficulty, time));
+    printf("Moves: %d\n", moves);
+    printf("Difficulty: %d\n", difficulty);
+    printf("Time: %d sec\n", (int)time);
 }

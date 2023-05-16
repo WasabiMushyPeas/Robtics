@@ -1,48 +1,45 @@
 #include "numslider.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 int main()
 {
 
     // Declare variables
-    int height = 0;
-    int width = 0;
+    int height = 5;
+    int width = 5;
     int characterNum = 0;
-    char move = ' ';
-
-    // Ask user for size of puzzle
-    printf("Enter the height of the puzzle: ");
-    scanf("%d", &height);
-    printf("Enter the width of the puzzle: ");
-    scanf("%d", &width);
-
-    // Allocate memory for puzzle
-    printf("height: %d\n", sizeof(height));
-    printf("width: %d\n", sizeof(width));
-    int puzzle[sizeof(height)][sizeof(width)];
-    printf("Puzzle created\n");
-    printf("Puzzle size: %d x %d \n", height, width);
+    char move;
+    int difficulty = 4;
+    int moves = 0;
+    double time = 0;
+    int puzzle[5][5];
 
     // Fill puzzle with numbers
     fillPuzzle(height, width, puzzle);
 
+    // Print puzzle
+    printPuzzleWithSides(height, width, puzzle);
+
+    // shuffle the Puzzle
+    shufflePuzzle(height, width, puzzle);
+
+    // make blank space
+    makeBlankSpace(height, width, puzzle);
+
+    clock_t t;
+    t = clock();
+
     // Main game loop
     while (1)
     {
-        printf("Main game loop\n");
+
         // Print puzzle
         printPuzzleWithSides(height, width, puzzle);
 
-        // Check if user has won
-        if (checkWin(height, width, puzzle))
-        {
-            printf("You win!\n");
-            return 0;
-        }
-
         // Ask user for input
-        printf("Enter a number to move: ");
+        printf("Enter a letter: ");
 
         // Get input
         scanf("%c", &move);
@@ -70,8 +67,19 @@ int main()
             break;
         }
 
-        // clear user input
-        while ((move = getchar()) != '\n' && move != EOF)
+        // clear input buffer
+        while ((characterNum = getchar()) != '\n' && characterNum != EOF)
             ;
+
+        // Check if puzzle is solved
+        if (moves == 4)
+        {
+            t = clock() - t;
+            time = (double)t / CLOCKS_PER_SEC;
+
+            printAsciiArt(moves, time, difficulty);
+            return 0;
+        }
+        moves++;
     }
 }
