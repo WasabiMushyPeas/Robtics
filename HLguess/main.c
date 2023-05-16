@@ -1,6 +1,7 @@
 #include "HLguess.h"
 
-int main(){
+int main()
+{
     int currentGuess = 0;
     int answer = 0;
     int numOfGuesses = 4;
@@ -11,22 +12,22 @@ int main(){
     printBanner();
     answer = random(min, max);
 
-   
-    //while(keepGoing){
+    // main loop for higher lower guessing game
+    while (keepGoing)
+    {
         printPrompt(min, max);
-        keepGoing = check(takeEntry(min, max), answer);
-        if(keepGoing < 0 || numOfGuesses <= 0){
-            puts("You lose!");
-            //break;
+        currentGuess = takeEntry(min, max);
+        printGuess(currentGuess);
+        numOfGuesses--;
+        if (check(currentGuess, answer) == -1)
+        {
+
+            keepGoing = 0;
         }
-
-        //numOfGuesses--;
-            
-            
-
-    
-
-    //}
-
-
+        else if (numOfGuesses == 0)
+        {
+            printf("You ran out of guesses!\n");
+            keepGoing = 0;
+        }
+    }
 }
